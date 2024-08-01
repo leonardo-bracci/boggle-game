@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "globals.h"
 #include "trie.h"
+
 
 // Generate a new trie node
 trieNode* generateTrieNode() {

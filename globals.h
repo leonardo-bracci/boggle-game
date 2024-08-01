@@ -1,7 +1,5 @@
-#ifndef SQUARE_H
-#define SQUARE_H
-
-
+#ifndef GLOBALS_H
+#define GLOBALS_H
 
 // DEFINITIONS
 
@@ -9,9 +7,9 @@
 #define SIDE 4
 #define LENGTH (SIDE * SIDE)
 
-// FUNCTIONS DECLARATIONS
+extern char debugMode;
 
-void generateGrid();
+// FUNCTIONS DECLARATIONS
 
 
 

@@ -192,27 +192,6 @@ void rand_list() {
     }
 }
 
-// Loads dictionary into memory
-void load() {
-    
-    FILE *dict = fopen("dictionary/boggle_dic.txt", "r");
-    if (dict == NULL) {
-        printf("Could not open dictionary.\n");
-        return;
-    }
-    const char buffer[LENGTH + 2];
-    int wordscount = 0;
-    // Reads the dictionary until reach EOF (End Of File)
-    printf("Loading dictionary...\n");
-    while (fscanf(dict, "%s", buffer) == 1) {
-        printf("%i\n", wordscount);
-        wordscount++;
-        insert(buffer);
-    }
-    printf("Dictionary loaded.\n");
-    fclose(dict);
-    
-}
 
 
 // Load words from square to hashtable
@@ -246,31 +225,6 @@ void load_boggle_hashtable(char square[SIDE][SIDE][3], int row, int col, int let
     w_boggle[letter_count] = '\0';
 }
 
-// Function to create a new trie node
-trieNode *getNode(void) {
-    trieNode *node = (trieNode *)malloc(sizeof(trieNode));
-    node->isEndOfWord = 0;
-    for (int i = 0; i < ALPHABET_SIZE; i++)
-        node->children[i] = NULL;
-    return node;
-}
-
-// Function to insert a word into the trie
-void insert(const char *word) {
-
-    trieNode *current = root;
-    while (*word) {
-        int index = *word - 'a';
-        if (!current->children[index])
-            current->children[index] = getNode();
-        current = current->children[index];
-        word++;
-    }
-
-    
-    current->isEndOfWord = 1;
-}
-
 // Function to search for a word in the trie
 int search(const char *word) {
     trieNode *current = root;
@@ -292,29 +246,3 @@ int hasChildren(trieNode *node) {
     return 0;
 }
 
-
-
-// Function to free the entire trie
-void freeTrie(trieNode *root) {
-    if (!root)
-        return;
-    for (int i = 0; i < ALPHABET_SIZE; i++)
-        freeTrie(root->children[i]);
-    free(root);
-}
-
-// Function to print the trie
-void printTrie(trieNode *node, char *prefix, int level) {
-    printf("Level: %d\n", level);
-    if (node->isEndOfWord) {
-        prefix[level] = '\0';
-        printf("%s\n", prefix);
-    }
-
-    for (int i = 0; i < ALPHABET_SIZE; i++) {
-        if (node->children[i]) {
-            prefix[level] = i + 'a';
-            printTrie(node->children[i], prefix, level + 1);
-        }
-    }
-}

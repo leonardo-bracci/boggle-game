@@ -5,8 +5,10 @@
 
 // Alphabet size, all letters
 #define ALPHABET_SIZE 26
-// Maximum word length
-#define LENGTH 16
+// // Side of the sqauare
+#define SIDE 4
+// Maximum length of a word because there are 16 letters on the grid
+#define LENGTH (SIDE * SIDE)
 
 // Trie node structure
 typedef struct trieNode {
