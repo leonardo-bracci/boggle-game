@@ -25,8 +25,11 @@ void load_dictionary(trieNode* root);
 void addWordToTrie(trieNode* root, char* word);
 // Print trie
 void printTrie(trieNode* root, char* word, int level);
+// Check if a word is in the trie
+int isWordInTrie(trieNode* root, char* word);
 // Free trie
 void freeTrie(trieNode* root);
+
 
 
 #endif

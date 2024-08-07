@@ -2,6 +2,8 @@
     "files.associations": {
         "string.h": "c",
         "stdlib.h": "c",
-        "trie.h": "c"
+        "trie.h": "c",
+        "square.h": "c",
+        "globals.h": "c"
     }
 }

@@ -57,6 +57,20 @@ void addWordToTrie(trieNode* root, char* word) {
     tempNode->isEndOfWord = 1;
 }
 
+// Check if a word is in the trie
+int isWordInTrie(trieNode* root, char* word) {
+    trieNode* tempNode = root;
+    for (int i = 0; word[i] != '\0'; i++) {
+        int index = word[i] - 'a';
+        if (tempNode->children[index] == NULL) {
+            return 0; // Word not found
+        }
+        tempNode = tempNode->children[index];
+    }
+    return tempNode->isEndOfWord;
+}
+
+
 // Print entire trie to terminal
 void printTrie(trieNode* root, char* word, int level) {
     if (root->isEndOfWord) {

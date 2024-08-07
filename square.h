@@ -3,15 +3,19 @@
 
 
 
-// DEFINITIONS
 
-// // Side of the sqauare
-#define SIDE 4
-#define LENGTH (SIDE * SIDE)
 
 // FUNCTIONS DECLARATIONS
 
-void generateGrid();
+// populate 3D array of words
+void generateGrid (char grid[SIDE][SIDE][2]);
+
+
+
+
+
+
+
 
 
 

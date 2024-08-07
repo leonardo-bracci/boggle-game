@@ -15,7 +15,7 @@ to run: ./boggle
 #include "trie.h"
 #include "square.h"
 
-char debugMode = 'f';
+char debugMode = 't';
 
 
 // DEFINITIONS
@@ -40,22 +40,13 @@ hashNode* generateHashNode();
 void recursion(trieNode* root, int col, int row, char* word);
 
 // Hashes word to a number to search the hashtable
-unsigned int hash(const char *word);
-
-// Hashes word to a number to search the hashtable
-unsigned int hash(const char *word);
-
-// Add word to hash table
-void addWord(char *word);
-
-// Print the hash table
-void printHashTable();
+unsigned int hash(char *word);
 
 // Returns true if word is in dictionary, else false
 char check(char *words);
 
-// Free hash table
-void freeHashTable();
+// Add word to hash table
+void addWord(char *word);
 
 int main() {
     // Initialize trie
@@ -103,44 +94,12 @@ int main() {
         }
     }
 
-    // Print hash table
-    if (debugMode == 't'){
-        char yesOrNo;
-        printf("Do you want to print the hashtable? (y/n): ");
-        fscanf(stdin, " %c", &yesOrNo);
-        if (yesOrNo == 'y') {
-            printHashTable();
-            printf("HashTable printed\n");
-        }
-    }
 
-    // LOGIC OF THE GAME
-    int score = 0;
-    while(score <  10){
-        // Ask the user to input a word
-        char userWord[LENGTH + 1];
-        printf("Enter a word: ");
-        fscanf(stdin, "%15s", userWord);
-        // Check if the word is in the hash table
-        if (check(userWord) == 't') {
-            printf("The word is in the hash table\n");
-            score++;
-            printf("Score: %i\n", score);
-        } else {
-            printf("The word is not in the hash table\n");
-        }
-    }
 
     // Free trie
     freeTrie(root);
     if (debugMode == 't'){
         printf("All memory of trie freed\n");
-    }
-
-    // Free hash table
-    void freeHashTable();
-    if(debugMode == 't'){
-        printf("All memory of hash table freed\n");
     }
 
     return 0;
@@ -187,22 +146,21 @@ void recursion(trieNode* root, int col, int row, char* word) {
             word[strlen(word)] = grid[ni][nj][0];
             word[strlen(word)] = '\0';
             // Check if the word is in the dictionary
-            if (isWordInTrie(root, word) == 1 && strlen(word) > 3) {
-                // printf("Found word: %s\n", word);
+            if (isWordInTrie(root, word) == 1) {
                 // Check if the word is in the hash table
                 if (check(word) == 'f'){
                     // Add the word to the hash table
                     addWord(word);
+                    printf("%s\n", word);
                 }
             }
-            // Recursive call to the neighbor
             recursion(root, ni, nj, word);
         }
         
     }
     // After recursive call, reset the visited flag
-    word[strlen(word) - 1] = '\0';
-    grid[col][row][1] = 'f';
+        word[strlen(word) - 1] = '\0';
+        grid[col][row][1] = 'f';
 
 }
 
@@ -219,7 +177,7 @@ hashNode* generateHashNode(){
 
 
 void addWord(char *word) {
-    // Hash the word
+    // Get the hash index
     unsigned int hashIndex = hash(word);
     // Create a new node
     hashNode* newNode = generateHashNode();
@@ -240,18 +198,16 @@ void addWord(char *word) {
 
 
 // Hashes word to a number to search the hashtable
-unsigned int hash(const char *word){
-
-    // unsigned int result;
-
+unsigned int hash(char *word){
     // printf("%s\n", words);
-    return tolower(word[0]) - 'a';
+//     return tolower(word[0]) - 'a';
+    unsigned int result;
 
-    // result = (!!word[0]) * (677 * (tolower(word[0]) - 97));
-    // result += (word[0] && word[1]) * (27 * (tolower(word[1]) - 97));
-    // result += (word[0] && word[1] && word[2]) * (tolower(word[2]) - 97) + 1;
+    result = (!!word[0]) * (677 * (tolower(word[0]) - 97));
+    result += (word[0] && word[1]) * (27 * (tolower(word[1]) - 97));
+    result += (word[0] && word[1] && word[2]) * (tolower(word[2]) - 97) + 1;
 
-    // return result;
+    return result;
 }
 
 // Returns true if word is in dictionary, else false
@@ -269,28 +225,3 @@ char check(char *words){
     }
     return 'f';
 }
-
-// Print the hash table
-void printHashTable() {
-    for (int i = 0; i < 26; i++) {
-        hashNode *current = boggle_table[i];
-        while (current != NULL) {
-            printf("%s\n", current->word);
-            current = current->next;
-        }
-    }
-}
-
-
-void freeHashTable() {
-    for (int i = 0; i < 26; i++) {
-        hashNode *current = boggle_table[i];
-        while (current != NULL) {
-            hashNode *temp = current;
-            current = current->next;
-            free(temp);
-        }
-        boggle_table[i] = NULL;
-    }
-}
-

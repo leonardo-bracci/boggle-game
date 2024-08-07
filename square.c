@@ -5,14 +5,16 @@
 #include "square.h"
 
 
-void generateGrid(){
+// void generateGrid (char[SIDE][SIDE][2]){
+void generateGrid(char grid[SIDE][SIDE][2]){
 
     // Letters in each dice
     char* dice[] = {
-        "rifobx", "ifehey", "denows", "utoknd", "hmsrao", "lupets",
-        "acitoa", "ylgkue", "qbmjoa", "ehispn", "vetign", "baliyt",
-        "ezavnt", "ralesc", "uwilrg", "pacemd"
+    "aaeegn", "elrtty", "aaoott", "abbjoo", "ehrrtv", "cimotu",
+    "distty", "eiosst", "delrvy", "achops", "himnqu", "eeinsu",
+    "eeghnw", "affkps", "hlnnrz", "deilrx"
     };
+
     
     // Seed the rand() function with a random number related to time
     srand(time(NULL));
@@ -34,8 +36,6 @@ void generateGrid(){
         printf("Dice array correctly shuffled\n");
     }
     
-    // rand() % LENGTH;
-    char grid[SIDE][SIDE][2];
     int diceCount = 0;
 
     printf("+---+---+---+---+\n");
@@ -50,6 +50,9 @@ void generateGrid(){
             grid[i][j][0] = letter;
             // Print the letter to the terminal to be visible for the player
             printf(" %c |", letter);
+
+            // Set visited flag to false ('f') for the recursion
+            grid[i][j][1] = 'f';
         }
         printf("\n+---+---+---+---+\n");
        
@@ -59,3 +62,4 @@ void generateGrid(){
         printf("Grid printed coorectly\n");
     }
 }
+
