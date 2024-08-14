@@ -27,6 +27,10 @@ void addWordToTrie(trieNode* root, char* word);
 void printTrie(trieNode* root, char* word, int level);
 // Check if a word is in the trie
 int isWordInTrie(trieNode* root, char* word);
+// Check if a node has children
+int hasChildren(trieNode* node);
+// Check if the last letter of a word has children
+int hasLastLetterChildren(trieNode* root, char* word);
 // Free trie
 void freeTrie(trieNode* root);
 

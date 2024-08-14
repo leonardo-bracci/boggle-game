@@ -15,7 +15,7 @@ to run: ./boggle
 #include "trie.h"
 #include "square.h"
 
-char debugMode = 'f';
+char debugMode = 't';
 
 
 // DEFINITIONS
@@ -35,6 +35,12 @@ char grid[SIDE][SIDE][2];
 hashNode* generateHashNode();
 
 //FUNCTIONS DECLARATIONS
+
+// Clear the input buffer
+void clearInputBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
 
 // Recursion to calculate the possible words
 void recursion(trieNode* root, int col, int row, char* word);
@@ -83,10 +89,26 @@ int main() {
         }
     }
 
+    // RULES OF THE GAME
+    printf("RULES OF THE GAME:\n");
+    printf("1. Boggle is a word game played on a 4x4 grid of letters.\n");
+    printf("2. The goal of the game is to find as many words as possible by connecting adjacent letters.\n");
+    printf("3. Words must be at least 4 letters long.\n");
+    printf("4. Letters in a word can be adjacent horizontally, vertically, or diagonally.\n");
+    printf("5. Each letter can only be used once in a word.\n");
+    printf("6. Proper nouns, abbreviations, and words with hyphens or apostrophes are not allowed.\n");
+    printf("7. The game ends when the player reaches a score of 10.\n");
+    printf("\n");
+
+    printf("Press enter to continue...\n");
+    clearInputBuffer();
+    getchar();
+    
+
     // populate 4x4 square of letters
     generateGrid(grid);
     if (debugMode == 't'){
-        printf("Grid correctly populated \n");  
+        printf("Grid correctly populated\n");  
     }
     
     // initialize hash table
@@ -96,9 +118,11 @@ int main() {
 
 
     // calculate all possible words in the square
-    char word[LENGTH + 1] = "";
+    char word[LENGTH + 1];
     for (int i = 0; i < SIDE; i++){
         for (int j = 0; j < SIDE; j++){
+            word[0] = grid[i][j][0];
+            word[1] = '\0';
             recursion(root, i, j, word);
         }
     }
@@ -113,6 +137,9 @@ int main() {
             printf("HashTable printed\n");
         }
     }
+
+    // Print the grid
+    printGrid(grid);
 
     // LOGIC OF THE GAME
     int score = 0;
@@ -148,22 +175,9 @@ int main() {
 
 
 void recursion(trieNode* root, int col, int row, char* word) {
-    // Current location in the grid
-    // if(debugMode == 't'){
-    //     printf("current cell = grid[%i][%i]: %c\n",col, row, grid[col][row][0]);
-    // }
-    // print word
-    // if(debugMode == 't' && strlen(word) < 4){
-    //     printf("Word: %s\n", word);
-    // }
-    // base case to exit the recursion
-    if(grid[col][row][2] == 't'){
-        return;
-    }  
-    // set visited flag to true 
-    grid[col][row][1] = 't';
-    
-    // array of offsets to check all 8 neighbors
+    printf("%s\n", word);
+
+    // Array of offsets to check all 8 neighbors
     int offsets[8][2] = {
         {-1, -1}, // Top-left
         {-1, 0},  // Top
@@ -177,34 +191,38 @@ void recursion(trieNode* root, int col, int row, char* word) {
 
     // For loop to traverse all the coordinates
     for (int k = 0; k < 8; k++) {
-        int ni = col + offsets[k][0];
-        int nj = row + offsets[k][1];
+        int newCol = col + offsets[k][0];
+        int newRow = row + offsets[k][1];
 
-        // Check if the neighbor is within bounds
-        if (ni >= 0 && ni < SIDE && nj >= 0 && nj < SIDE && grid[ni][nj][1] == 'f') {
-            grid[ni][nj][1] = 't';
-            // Append the letter to the word
-            word[strlen(word)] = grid[ni][nj][0];
-            word[strlen(word)] = '\0';
-            // Check if the word is in the dictionary
-            if (isWordInTrie(root, word) == 1 && strlen(word) > 3) {
-                // printf("Found word: %s\n", word);
-                // Check if the word is in the hash table
-                if (check(word) == 'f'){
-                    // Add the word to the hash table
-                    addWord(word);
-                }
-            }
-            // Recursive call to the neighbor
-            recursion(root, ni, nj, word);
-        }
+        // Check if the neighbor is within bounds and hasn't been visited
+        if (newCol < 0 || newCol >= SIDE || newRow < 0 || newRow >= SIDE || grid[newCol][newRow][1] == 't' || !hasLastLetterChildren(root, word))
+            continue;
+
+        // Now that we know we can extend the word, set the visited flag
+        grid[newCol][newRow][1] = 't';
+
+        // Append the letter to the word
+        int len = strlen(word);
+        word[len] = grid[newCol][newRow][0];
+        word[len + 1] = '\0';
+
         
-    }
-    // After recursive call, reset the visited flag
-    word[strlen(word) - 1] = '\0';
-    grid[col][row][1] = 'f';
 
+        // Check if the word is in the dictionary
+        if (strlen(word) > 3 && isWordInTrie(root, word) == 1 && check(word) == 'f') {
+            // Add word to hashtable if it's valid and not already in there
+            addWord(word);
+        }
+
+        // Recursive call to explore further
+        recursion(root, newCol, newRow, word);
+
+        // Backtrack: remove the last letter and reset the visited flag
+        word[len] = '\0';
+        grid[newCol][newRow][1] = 'f';
+    }
 }
+
 
 // Generate a new hash node
 hashNode* generateHashNode(){

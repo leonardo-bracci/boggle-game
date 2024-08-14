@@ -19,22 +19,24 @@ trieNode* generateTrieNode() {
 
 // Load dictionary into memory
 void load_dictionary(trieNode* root) {
-    FILE *dictionary = fopen("dictionary/dictionary.txt", "r");
+    // FILE *dictionary = fopen("dictionary/dictionary.txt", "r");
+    FILE *dictionary = fopen("dictionary/dictionary_long.txt", "r");
+    printf("Loading dictionary...\n");
     if (dictionary == NULL) {
         printf("Error opening file\n");
         exit(1);
     }
     char buffer[LENGTH + 2];
     while (fscanf(dictionary, "%s", buffer) == 1) {
-        char word[LENGTH + 1];
-        int j = 0;
-        for (int i = 0; buffer[i] != '\0'; i++) {
-            if (buffer[i] >= 'a' && buffer[i] <= 'z') {
-                word[j++] = buffer[i];
-            }
-        }
-        word[j] = '\0';
-        addWordToTrie(root, word);
+        // char word[LENGTH + 1];
+        // int j = 0;
+        // for (int i = 0; buffer[i] != '\0'; i++) {
+        //     if (buffer[i] >= 'a' && buffer[i] <= 'z') {
+        //         word[j++] = buffer[i];
+        //     }
+        // }
+        // word[j] = '\0';
+        addWordToTrie(root, buffer);
     }
     fclose(dictionary);
 }
@@ -83,6 +85,33 @@ void printTrie(trieNode* root, char* word, int level) {
             printTrie(root->children[i], word, level + 1);
         }
     }
+}
+
+// check if a node has children
+int hasChildren(trieNode* node) {
+    for (int i = 0; i < ALPHABET_SIZE; i++) {
+        if (node->children[i] != NULL) {
+            return 1; // Node has at least one child
+        }
+    }
+    return 0; // Node has no children
+}
+
+// Check if the last letter of a word has children
+int hasLastLetterChildren(trieNode* root, char* word) {
+    trieNode* tempNode = root;
+
+    // Traverse the trie to find the last letter of the word
+    for (int i = 0; word[i] != '\0'; i++) {
+        int index = word[i] - 'a';
+        if (tempNode->children[index] == NULL) {
+            return 0; // Word does not exist in trie, so last letter has no children
+        }
+        tempNode = tempNode->children[index];
+    }
+
+    // Now tempNode is the node representing the last letter of the word
+    return hasChildren(tempNode);
 }
 
 // Free trie

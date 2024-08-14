@@ -32,11 +32,23 @@ void generateGrid(char grid[SIDE][SIDE][2]){
     // for (int i = 0; i < LENGTH; i++){
     //     printf("%s\n", dice[i]);
     // }
-    if (debugMode == 't'){  
-        printf("Dice array correctly shuffled\n");
-    }
     
+    // 2 nested loops to populate the 2D array
     int diceCount = 0;
+    for (int i = 0; i < SIDE; i++){
+        for(int j = 0; j < SIDE; j++){
+            // Pick a random letter from each dice
+            char letter = dice[diceCount++][rand() % 5];
+            grid[i][j][0] = letter;
+
+            // Set visited flag to false ('f') for the recursion
+            grid[i][j][1] = 'f';
+        }
+    }
+}
+
+// Print the grid to the terminal
+void printGrid(char grid[SIDE][SIDE][2]){
 
     printf("+---+---+---+---+\n");
 
@@ -45,14 +57,7 @@ void generateGrid(char grid[SIDE][SIDE][2]){
     for (int i = 0; i < SIDE; i++){
         printf("|");
         for(int j = 0; j < SIDE; j++){
-            // Pick a random letter from each dice
-            char letter = dice[diceCount++][rand() % 5];
-            grid[i][j][0] = letter;
-            // Print the letter to the terminal to be visible for the player
-            printf(" %c |", letter);
-
-            // Set visited flag to false ('f') for the recursion
-            grid[i][j][1] = 'f';
+            printf(" %c |", grid[i][j][0]);
         }
         printf("\n+---+---+---+---+\n");
        

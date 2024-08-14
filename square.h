@@ -10,6 +10,9 @@
 // populate 3D array of words
 void generateGrid (char grid[SIDE][SIDE][2]);
 
+// Print the grid to the terminal
+void printGrid(char grid[SIDE][SIDE][2]);
+
 
 
 
