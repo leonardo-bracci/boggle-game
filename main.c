@@ -3,6 +3,12 @@
 GAME OF BOGGLE
 to compile: gcc -o boggle main.c trie.c square.c
 to run: ./boggle
+
+For unix systems (Linux, gitHub codespace, etc){
+    to run with debugging info: gcc -g -o boggle main.c trie.c square.c
+    to check memory leaks: valgrind --leak-check=full ./boggle
+}
+
 */
 
 
@@ -15,7 +21,7 @@ to run: ./boggle
 #include "trie.h"
 #include "square.h"
 
-char debugMode = 't';
+char debugMode = 'f';
 
 
 // DEFINITIONS
@@ -175,7 +181,6 @@ int main() {
 
 
 void recursion(trieNode* root, int col, int row, char* word) {
-    printf("%s\n", word);
 
     // Array of offsets to check all 8 neighbors
     int offsets[8][2] = {
